@@ -1,0 +1,39 @@
+{{- if .Values.frontend.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "sify-ai.fullname" . }}-frontend-test-connection"
+  labels:
+    {{- include "sify-ai.labels" . | nindent 4 }}
+    app: frontend
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['--spider', '{{ include "sify-ai.fullname" . }}-frontend-service:{{ .Values.frontend.service.port }}']
+  restartPolicy: Never
+{{- end }}
+
+---
+
+{{- if .Values.backend.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "sify-ai.fullname" . }}-backend-test-connection"
+  labels:
+    {{- include "sify-ai.labels" . | nindent 4 }}
+    app: backend
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['--spider', '{{ include "sify-ai.fullname" . }}-backend-service:{{ .Values.backend.service.port }}']
+  restartPolicy: Never
+{{- end }}

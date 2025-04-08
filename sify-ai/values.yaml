@@ -1,0 +1,100 @@
+frontend:
+  enabled: true
+  replicaCount: 1
+
+  image:
+    repository: sirishakaruturi/sifyai-frontend
+    tag: dev
+    pullPolicy: Always
+
+  containerPort: 3000
+
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 3000
+
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: selfsigned-clusterissuer
+    hosts:
+      - host: platform.sifyai.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: platform-sifyai-com-tls
+        hosts:
+          - platform.sifyai.com
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80  # Optional
+
+backend:
+  enabled: true
+  replicaCount: 1
+
+  image:
+    repository: sirishakaruturi/notebooks-backend
+    tag: dev
+    pullPolicy: Always
+
+  containerPort: 5000
+
+  service:
+    type: NodePort
+    port: 5000
+    targetPort: 5000
+    nodePort: 30601
+
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: selfsigned-clusterissuer
+    hosts:
+      - host: backend-notebooks.sifyai.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: backend-tls-secret
+        hosts:
+          - backend-notebooks.sifyai.com
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80  # Optional
+
+global:
+  imagePullSecrets: []
+
+  serviceAccount:
+    create: true
+    name: deployer-sa
+    annotations: {}
+
+  rbac:
+    create: true
+    clusterRoleName: deployer-clusterrole
+    clusterRoleBindingName: deployer-clusterrolebinding
+
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+
+  resources: {}
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
