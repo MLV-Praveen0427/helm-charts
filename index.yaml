@@ -3,7 +3,7 @@ entries:
   sify-ai:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-04-08T16:33:49.063055268+05:30"
+    created: "2025-04-08T16:47:26.782098999+05:30"
     description: converting sifyaidemo
     digest: 582e91ebfd0182dd186d3a35fdb8e1e53575d1c11f0b1b5e7c840b22e9e55de2
     name: sify-ai
@@ -11,4 +11,4 @@ entries:
     urls:
     - https://mlv-praveen0427.github.io/helm-charts/sify-ai-0.1.0.tgz
     version: 0.1.0
-generated: "2025-04-08T16:33:49.061635687+05:30"
+generated: "2025-04-08T16:47:26.781088986+05:30"
