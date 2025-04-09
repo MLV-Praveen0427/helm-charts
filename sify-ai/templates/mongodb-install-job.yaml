@@ -1,4 +1,4 @@
-{{- if .Values.mongodb }}
+{{- if .Values.mongodb.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -12,7 +12,7 @@ spec:
   backoffLimit: 1
   template:
     spec:
-      serviceAccountName: {{ .Values.global.serviceAccount.name }}
+      # Removed serviceAccountName to avoid timing issue with deployer-sa
       containers:
         - name: helm-mongodb-install
           image: alpine/helm:3.12.0
@@ -21,7 +21,9 @@ spec:
             - |
               helm repo add bitnami https://charts.bitnami.com/bitnami
               helm repo update
-              helm install my-mongodb bitnami/mongodb --namespace {{ .Release.Namespace }} --set auth.rootPassword=secretpassword
+              helm install {{ .Values.mongodb.releaseName }} bitnami/mongodb \
+                --namespace {{ .Release.Namespace }} \
+                --set auth.rootPassword={{ .Values.mongodb.rootPassword | quote }}
       restartPolicy: OnFailure
 {{- end }}
 
