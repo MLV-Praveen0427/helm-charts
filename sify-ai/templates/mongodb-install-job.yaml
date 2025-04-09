@@ -1,0 +1,27 @@
+{{- if .Values.mongodb }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "sify-ai.fullname" . }}-mongodb-install
+  labels:
+    app: mongodb
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: 1
+  template:
+    spec:
+      serviceAccountName: {{ .Values.global.serviceAccount.name }}
+      containers:
+        - name: helm-mongodb-install
+          image: alpine/helm:3.12.0
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              helm repo add bitnami https://charts.bitnami.com/bitnami
+              helm repo update
+              helm install my-mongodb bitnami/mongodb --namespace {{ .Release.Namespace }} --set auth.rootPassword=secretpassword
+      restartPolicy: OnFailure
+{{- end }}
+

@@ -24,10 +24,8 @@ metadata:
   labels:
     {{- include "sify-ai.labels" . | nindent 4 }}
     app: frontend
-  {{- with $ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- toYaml $ingress.annotations | nindent 4 }}
 spec:
   {{- if and $ingress.className (semverCompare ">=1.18-0" $kubeVersion) }}
   ingressClassName: {{ $ingress.className }}
@@ -92,10 +90,8 @@ metadata:
   labels:
     {{- include "sify-ai.labels" . | nindent 4 }}
     app: backend
-  {{- with $ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- toYaml $ingress.annotations | nindent 4 }}
 spec:
   {{- if and $ingress.className (semverCompare ">=1.18-0" $kubeVersion) }}
   ingressClassName: {{ $ingress.className }}

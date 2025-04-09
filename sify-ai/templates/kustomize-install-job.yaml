@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "sify-ai.fullname" . }}-kubeflow-kustomize
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+      containers:
+        - name: kustomize-runner
+          image: bitnami/kubectl:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              curl -s https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh | bash
+              sudo mv kustomize /usr/local/bin/
+              while ! kustomize build /custom/kubeflow/overlays | kubectl apply --server-side --force-conflicts -f -; do
+                echo "Retrying to apply resources..."
+                sleep 20
+              done
+      restartPolicy: OnFailure
+

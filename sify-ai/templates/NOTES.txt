@@ -54,3 +54,15 @@ Backend ClusterIP (using port-forward):
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
 {{- end }}
 
+{{- if eq .Values.kserve true }}
+KServe installed. You can check inference services using:
+kubectl get inferenceservices -n <your-namespace>
+{{- end }}
+
+{{- if and .Values.mongodb.enabled }}
+MongoDB service deployed via Bitnami chart. Access via:
+kubectl get svc {{ .Values.mongodb.releaseName | default "my-mongodb" }} -o wide
+{{- end }}
+
+Kubeflow overlays applied using Kustomize.
+

@@ -98,3 +98,13 @@ global:
   tolerations: []
   affinity: {}
 
+kserve: true  # Enables KServe installation notice or job
+
+kubeflow:
+  enabled: true                      # Enables Kubeflow overlay job
+  overlayPath: "/custom/kubeflow/overlays"  # Path to your overlays
+
+mongodb:
+  enabled: true
+  releaseName: my-mongodb
+  rootPassword: secretpassword

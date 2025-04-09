@@ -1,11 +1,9 @@
+# templates/tests/test-connection.yaml
 {{- if .Values.frontend.enabled }}
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "sify-ai.fullname" . }}-frontend-test-connection"
-  labels:
-    {{- include "sify-ai.labels" . | nindent 4 }}
-    app: frontend
+  name: {{ include "sify-ai.fullname" . }}-frontend-test
   annotations:
     "helm.sh/hook": test
 spec:
@@ -17,16 +15,12 @@ spec:
   restartPolicy: Never
 {{- end }}
 
----
-
 {{- if .Values.backend.enabled }}
+---
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "sify-ai.fullname" . }}-backend-test-connection"
-  labels:
-    {{- include "sify-ai.labels" . | nindent 4 }}
-    app: backend
+  name: {{ include "sify-ai.fullname" . }}-backend-test
   annotations:
     "helm.sh/hook": test
 spec:
